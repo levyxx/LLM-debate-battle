@@ -52,14 +52,74 @@ AIとディベートバトルを楽しめるWebアプリケーション
 - **HTTP クライアント**: Axios
 - **スタイリング**: カスタムCSS（ダークテーマ）
 
-### インフラ
-- **コンテナ**: Docker & Docker Compose
-- **Webサーバー**: Nginx (リバースプロキシ)
-- **データ永続化**: Docker Volume
-
 ## 🚀 クイックスタート
 
+### 🐳 Docker（推奨）
+
+DockerとDocker Composeを使用すると、最も簡単に起動できます。
+
+#### 前提条件
+- Docker Desktop（または Docker + Docker Compose）がインストール済み
+
+#### 起動手順
+
+1. **リポジトリをクローン**
+   ```bash
+   git clone <repository-url>
+   cd LLM-debate-battle
+   ```
+
+2. **環境変数を設定**
+   ```bash
+   cp .env.example .env
+   nano .env  # またはお好みのエディタで編集
+   ```
+   
+   `.env`ファイルにOpenAI APIキーを設定：
+   ```env
+   OPENAI_API_KEY=sk-your-actual-api-key-here
+   OPENAI_MODEL=gpt-4o-mini
+   ```
+
+3. **Docker Composeで起動**
+   ```bash
+   docker compose up
+   ```
+   
+   初回起動時はイメージのビルドに数分かかります。
+   起動後、ターミナルに以下のように表示されます：
+   ```
+   🚀 LLM Debate Battle Server Started!
+   📡 Backend API: http://localhost:8080
+   🌐 Frontend:    http://localhost:3000
+   ```
+
+4. **ブラウザでアクセス**
+   
+   http://localhost:3000 を開いてアプリを使用できます。
+
+#### Docker コマンド
+
+```bash
+# バックグラウンドで起動
+docker compose up -d
+
+# ログを確認
+docker compose logs -f
+
+# 停止
+docker compose down
+
+# 完全にクリーンアップ（データベース含む）
+docker compose down -v
+
+# 再ビルド
+docker compose up --build
+```
+
 ### ローカル開発環境
+
+手動でセットアップする場合は以下の手順に従ってください。
 
 #### バックエンドのセットアップ
 
@@ -215,7 +275,64 @@ AIとディベートバトルを楽しめるWebアプリケーション
 - `losses`: 敗北数
 - `draws`: 引き分け数
 
+## � Docker構成
+
+### サービス
+
+- **backend**: Goアプリケーション（ポート8080）
+  - マルチステージビルドで最適化
+  - Alpine Linuxベースで軽量
+  - SQLiteデータベースをボリュームマウント
+
+- **frontend**: React + Nginx（ポート3000→80）
+  - 本番ビルドされた静的ファイル
+  - Nginxで配信
+  - APIリクエストをバックエンドにプロキシ
+
+### ファイル構成
+
+```
+.
+├── compose.yaml           # Docker Compose設定
+├── .env                    # 環境変数（要作成）
+├── .env.example           # 環境変数テンプレート
+├── .dockerignore          # Docker除外ファイル
+├── backend/
+│   ├── Dockerfile         # バックエンドDockerfile
+│   └── .env.example       # バックエンド環境変数テンプレート
+└── frontend/
+    ├── Dockerfile         # フロントエンドDockerfile
+    ├── nginx.conf         # Nginx設定
+    └── .env.production    # フロントエンド本番環境変数
+```
+
+### ポート設定
+
+| サービス | コンテナポート | ホストポート | 用途 |
+|---------|--------------|-------------|------|
+| backend | 8080 | 8080 | バックエンドAPI |
+| frontend | 80 | 3000 | フロントエンドWebUI |
+
+### データ永続化
+
+SQLiteデータベースは`./backend/debate.db`にマウントされ、コンテナを削除しても保持されます。
+
 ## 🔍 トラブルシューティング
+
+### Docker関連
+
+**問題**: コンテナが起動しない
+```bash
+# ログを確認
+docker compose logs
+
+# 特定のサービスのログ
+docker compose logs backend
+docker compose logs frontend
+
+# コンテナの状態を確認
+docker compose ps
+```
 
 **問題**: ポートが既に使用されている
 ```bash

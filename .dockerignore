@@ -1,0 +1,37 @@
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.local
+
+# Documentation
+README.md
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+backend/server
+backend/debug
+backend/debate.db
+
+# Frontend
+frontend/node_modules
+frontend/dist
+frontend/.vite
+
+# Docker
+Dockerfile
+docker-compose.yml
+compose.yaml
+.dockerignore

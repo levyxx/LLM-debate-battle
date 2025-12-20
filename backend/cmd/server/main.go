@@ -79,6 +79,13 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
-	log.Printf("Server starting on port %s", port)
+	log.Println("========================================")
+	log.Printf("🚀 LLM Debate Battle Server Started!")
+	log.Printf("")
+	log.Printf("📡 Backend API: http://localhost:%s", port)
+	log.Printf("🌐 Frontend:    http://localhost:3000")
+	log.Printf("")
+	log.Printf("🤖 OpenAI Model: %s", model)
+	log.Println("========================================")
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }
