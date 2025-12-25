@@ -50,7 +50,7 @@ AIとディベートバトルを楽しめるWebアプリケーション
 - **ビルドツール**: Vite 7
 - **ルーティング**: React Router DOM
 - **HTTP クライアント**: Axios
-- **スタイリング**: カスタムCSS（ダークテーマ）
+- **スタイリング**: カスタムCSS
 
 ## 🚀 クイックスタート
 
@@ -65,14 +65,13 @@ DockerとDocker Composeを使用すると、最も簡単に起動できます。
 
 1. **リポジトリをクローン**
    ```bash
-   git clone <repository-url>
+   gh repo clone levyxx/LLM-debate-battle
    cd LLM-debate-battle
    ```
 
 2. **環境変数を設定**
    ```bash
    cp .env.example .env
-   nano .env  # またはお好みのエディタで編集
    ```
    
    `.env`ファイルにOpenAI APIキーを設定：
@@ -83,7 +82,7 @@ DockerとDocker Composeを使用すると、最も簡単に起動できます。
 
 3. **Docker Composeで起動**
    ```bash
-   docker compose up
+   docker compose up --build
    ```
    
    初回起動時はイメージのビルドに数分かかります。
